@@ -1,21 +1,29 @@
 import { FcGoogle } from "react-icons/fc";
 import React ,{useState} from 'react';
 import { useFirebase } from '../Firebase/Context';
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const firebase=useFirebase()
   const [email,setEmail]=useState('')
   const [pwd,setPwd]=useState('')
+  const [error, setError] = useState(null); // State variable to store error
 
-  const handleSubmit=async(e)=>{
-    e.preventDefault()
-    console.log('Login a User');
-    const result=await firebase. LoginwithEmailAndPassword(email,pwd)
-    console.log('Login Successful',result);
-  }
-  console.log(firebase);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log('Login a User');
+      await firebase.LoginwithEmailAndPassword(email, pwd);
+      console.log('Login Successful');
+    } catch (error) {
+      console.error('Login Error:', error.message);
+      setError(error.message); // Update error state with error message
+    }
+  };
 
   return (
+  <>  
+    <Toaster position="top-center" reverseOrder={false} />
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md p-8 rounded-lg w-full space-y-8 border-2 border-neutral-300">
         <div>
@@ -60,6 +68,12 @@ const Login = () => {
           </div>
           <div>
             <button
+              onClick={()=>{
+                  toast(`Login Successful`, {
+                   icon: '👍',
+                  });
+                }
+              } 
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -88,6 +102,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+   </> 
   );
 };
 

@@ -1,5 +1,6 @@
 import React ,{useState} from 'react';
 import { useFirebase } from '../Firebase/Context';
+import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {
   const firebase=useFirebase()
@@ -15,6 +16,9 @@ const Signup = () => {
   console.log(firebase);
 
   return (
+
+  <>
+    <Toaster position="top-center" reverseOrder={false} />
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md p-8 rounded-lg w-full space-y-8 border-2 border-neutral-300">
         <div>
@@ -88,6 +92,12 @@ const Signup = () => {
           <div>
             <button
               type="submit"
+              onClick={()=>{
+                toast(`Account Created`, {
+                  icon: '👏',
+                });
+              }
+            } 
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Create Account
@@ -104,7 +114,9 @@ const Signup = () => {
         </div>
       </div>
     </div>
+  </> 
   );
 };
+
 
 export default Signup;
