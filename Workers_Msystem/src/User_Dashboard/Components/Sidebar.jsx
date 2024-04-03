@@ -1,8 +1,8 @@
 import React from 'react';
-import { SidebarData } from './SidebarData';
-import HomeLogo from '../../Images/Group.svg';
 import { NavLink } from 'react-router-dom';
-
+import HomeLogo from '../../Images/Group.svg'
+import { SidebarData } from './SidebarData';
+ 
 const Sidebar = () => {
 
     return (
