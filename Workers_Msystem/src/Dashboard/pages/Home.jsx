@@ -10,6 +10,7 @@ import HomeTable from './HomeTable/HomeTable'
 import { useNavigate } from "react-router-dom";
 
 function Home() {
+  console.log("Home component rendered");
   const navigate=useNavigate()
   const handleSeeAllClick = () => {
     navigate('/dashboard/workers');

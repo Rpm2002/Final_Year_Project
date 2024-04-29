@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from './Sidebar'
 import Navpage from './Navpage'
-function MainUserDashboard() {
+function MainWorkerDashboard() {
   return (
     <>
         <section>
@@ -18,4 +18,4 @@ function MainUserDashboard() {
   )
 }
 
-export default MainUserDashboard
+export default MainWorkerDashboard

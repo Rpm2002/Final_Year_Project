@@ -2,6 +2,7 @@ import React from 'react'
 import LoggedinUserImg from '../../Images/LoggedUser.svg'
 import WorkerTable from './WorkerTab/WorkerTable'
 function Workers() {
+  console.log("Workers component rendered");
   return (
     <>
       {/* Header type */}

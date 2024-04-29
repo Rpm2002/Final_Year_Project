@@ -4,6 +4,7 @@ import WorkerTable from './WorkerTab/WorkerTable'
 import { AiOutlineTeam } from 'react-icons/ai';
 
 function Users() {
+  console.log("Users component rendered");
   return (
     <>
       {/* Header type */}

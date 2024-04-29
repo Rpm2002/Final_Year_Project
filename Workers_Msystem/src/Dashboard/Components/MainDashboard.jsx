@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import Navpage from './Navpage';
 
 const MainDashboard = () => {
+    console.log("MainDashboard component rendered");
     return (
         <>
         <section>

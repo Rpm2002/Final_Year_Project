@@ -4,7 +4,7 @@ import HomeLogo from '../../Images/Group.svg'
 import { SidebarData } from './SidebarData';
  
 const Sidebar = () => {
-
+    console.log('sidebar');
     return (
         <>
             <section className='divide-x-2'>

@@ -4,7 +4,7 @@ import HomeLogo from '../../Images/Group.svg';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
-
+    console.log("Sidebar component rendered");
     return (
         <>
             <section className='divide-x-2'>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp} from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged,signOut } from "firebase/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore} from 'firebase/firestore';
 
@@ -21,19 +22,25 @@ const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 export const db=getFirestore(firebaseApp)
+export const storage = getStorage(firebaseApp);
 
 
 export const FirebaseProvider = (props) => {
+  console.log("FirebaseProvider initialized");
+  
+  // Add console.log to check firebaseApp and firebaseAuth
+  console.log("firebaseApp:", firebaseApp);
+  console.log("firebaseAuth:", firebaseAuth);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setUser(user);
     });
-    
     // Cleanup subscription
     return () => unsubscribe();
   }, [firebaseAuth]);
+
 
   const SignUpwithEmailAndPassword = (email, password) => {
     return createUserWithEmailAndPassword(firebaseAuth, email, password);
@@ -47,11 +54,15 @@ export const FirebaseProvider = (props) => {
     return signInWithPopup(firebaseAuth, googleProvider);
   }
 
+  const SignOut = () => {
+    return signOut(firebaseAuth); // Call signOut function from Firebase auth
+  }
+
   const isLoggedIn = user !== null;
 
   return (
     <FirebaseContext.Provider
-      value={{ SignUpwithEmailAndPassword, LoginwithEmailAndPassword, LoginwithGoogle, isLoggedIn, user }}
+      value={{ SignUpwithEmailAndPassword, LoginwithEmailAndPassword, LoginwithGoogle, isLoggedIn, user,SignOut }}
     >
       {props.children}
     </FirebaseContext.Provider>

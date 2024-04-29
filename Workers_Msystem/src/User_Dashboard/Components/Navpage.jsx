@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes,Route } from 'react-router-dom'
 import Enquiries from '../pages/Enquiries'
 function Navpage() {
+  console.log('navpage userdash');
   return (
     <>
       <section>

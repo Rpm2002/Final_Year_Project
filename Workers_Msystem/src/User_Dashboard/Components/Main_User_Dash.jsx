@@ -2,6 +2,7 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import Navpage from './Navpage'
 function MainUserDash() {
+    console.log('mainuserdash');
   return (
     <>
         <section>
