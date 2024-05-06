@@ -3,9 +3,9 @@ import React from 'react';
 function ExpertCard({ firstName, lastName, profession, imgUrl }) {
   return (
     <>
-      <div className='m-3 flex flex-col flex-wrap cursor-pointer hover:scale-95 transition-all duration-150 ease-in-out'>
+      <div className='ml-2 mb-2 mr-2 w-[410px] h-[329px] flex flex-col flex-wrap cursor-pointer hover:scale-95 transition-all duration-150 ease-in-out'>
         <div>
-          <img src={imgUrl} className='w-56 h-64' alt={name} />
+          <img src={imgUrl} className='w-[410px] h-[266px]' alt={name} />
         </div>
         <div className='mt-2'>
           <p className='font-bold'>{firstName} {lastName}</p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 import HomeLogo from '../Images/Group.svg';
 import LoggedUser from './LoggedInUserDetail';
 import { useFirebase } from '../Firebase/Context';
@@ -45,49 +45,49 @@ function Header() {
           <nav className="lg:mr-4 mr-1 px-4">
             <ul className="flex lg:space-x-7 justify-center items-center">
               <li>
-                {/* Use Link instead of anchor tag */}
                 <Link to="/expertsearch" className="text-gray-600 font-semibold hover:text-gray-400">
                   Explore Experts
                 </Link>
               </li>
 
-              {firebase.isLoggedIn && (
-                <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-white hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg"
-                  >
-                    Sign Out
-                  </button>
-                </li>
-              )}
-              {/* Conditionally render based on user's authentication status */}
               {firebase.isLoggedIn ? (
-                <LoggedUser />
+                <>
+                  <li>
+                    <Link to="/enquiry" className="text-gray-600 font-semibold hover:text-gray-400">
+                      Enquiry List
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleSignOut}
+                      className="text-white hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg"
+                    >
+                      Sign Out
+                    </button>
+                  </li>
+                  
+                  <li>
+                    <LoggedUser />
+                  </li>
+                </>
               ) : (
-                <nav className="lg:mr-4 mr-1 px-4">
-                  <ul className="flex lg:space-x-7 justify-center items-center">
-                    {/* Display Join Us, Login, and SignUp buttons if not logged in */}
-                    <li>
-                      <a href="/join" className="text-gray-600 font-semibold hover:text-gray-400">
-                        Join Us
-                      </a>
-                    </li>
-                    <li>
-                      <Link to="/login" className="text-gray-600 font-semibold hover:text-gray-400">
-                        Login
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/signup"
-                        className="text-white hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg"
-                      >
-                        SignUp
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
+                <>
+                  <li>
+                    <Link to="/join" className="text-gray-600 font-semibold hover:text-gray-400">
+                      Join Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/login" className="text-gray-600 font-semibold hover:text-gray-400">
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/signup" className="text-white hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg">
+                      SignUp
+                    </Link>
+                  </li>
+                </>
               )}
             </ul>
           </nav>

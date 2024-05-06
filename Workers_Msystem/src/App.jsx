@@ -7,12 +7,13 @@ import Home from './pages/Home';
 import ExpertSearch from './pages/ExpertsSearch';
 import ExpertDetail from './pages/ExpertDetail';
 import Join from './pages/Join';
+import EnquiryList from './pages/EnquiryList.jsx';
 import Workers from './Dashboard/pages/Workers.jsx';
 import Users from './Dashboard/pages/Users.jsx';
 import MainDashboard from './Dashboard/Components/MainDashboard.jsx';
 import MainWorkerDashboard from './Worker_Dashboard/Components/Main_Worker_Dashboard.jsx';
 import MainUserDash from './User_Dashboard/Components/Main_User_Dash.jsx';
-
+import Thankyou from './pages/Thankyou.jsx';
 function App() {
   
   return (
@@ -25,10 +26,12 @@ function App() {
           <Route path='/expertsearch' element={<ExpertSearch />} />
           <Route path='/expertdetail/:id' element={<ExpertDetail />} />
           <Route path='/join' element={<Join />} />
+          <Route path='/enquiry' element={<EnquiryList/>}/>
+          <Route path='/thankyou' element={<Thankyou/>}/>
         </Routes>
-          <MainDashboard />
-          <MainWorkerDashboard />
-          <MainUserDash />
+          {/* <MainDashboard /> */}
+          {/* <MainWorkerDashboard /> */}
+          {/* <MainUserDash /> */}
       </BrowserRouter>
     </>
   );
