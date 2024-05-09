@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import ExpertCard from '../Components/ExpertCard';
-import { collection, getDocs, where, query,addDoc } from 'firebase/firestore';
+import { collection, getDocs, where, query, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../Firebase/Context';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,23 @@ function EnquiryList() {
       }));
     }
   };
+
+  const handleRemoveEnquiry = async (teamId) => {
+    if (window.confirm('Do you want to remove this enquired team?')) {
+      try {
+        // Update the enquiry field in the database to false
+        await updateDoc(doc(db, 'WorkerInfo', teamId), {
+          enquiry: false
+        });
+        // Remove the team from the list
+        setEnquiredTeams(prevTeams => prevTeams.filter(team => team.id !== teamId));
+        toast.success('Enquiry removed successfully');
+      } catch (error) {
+        toast.error('Error removing enquiry, see console for details');
+        console.error('Error removing enquiry:', error);
+      }
+    }
+  };
   
 
   const handleSubmit = async (e) => {
@@ -64,9 +81,26 @@ function EnquiryList() {
         toast.error('Mobile number should be 10 digits');
         return;
       }
-
-      const docRef = await addDoc(collection(db, 'EnquiryInfo'), formData);
+  
+      // Fetch enquired teams from WorkerInfo collection
+      const q = query(collection(db, 'WorkerInfo'), where('enquiry', '==', true));
+      const snapshot = await getDocs(q);
+      const enquiredTeamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+      // Combine first and last names of enquired teams
+      const enquiredTeamNames = enquiredTeamsData.map(team => `${team.firstName} ${team.lastName}`);
+  
+      // Add combined names to the form data
+      const updatedFormData = {
+        ...formData,
+        teamlist: enquiredTeamNames.join(', ') // Join names with comma if there are multiple teams
+      };
+  
+      // Add form data to EnquiryInfo collection
+      const docRef = await addDoc(collection(db, 'EnquiryInfo'), updatedFormData);
       console.log('Document written with ID: ', docRef.id);
+  
+      // Reset form data
       setFormData({
         name: '',
         email: '',
@@ -75,18 +109,20 @@ function EnquiryList() {
         address: '',
         workDescription: ''
       });
-      toast.success('Enquiry submitted successfully')
-       // Redirect to the Thankyou page after 3 seconds
-       setTimeout(() => {
+  
+      toast.success('Enquiry submitted successfully');
+  
+      // Redirect to the Thankyou page after 3 seconds
+      setTimeout(() => {
         navigate('/thankyou');
       }, 3000);
-      
+  
     } catch (error) {
-      toast.error('Form not submitted, see console for error')
+      toast.error('Form not submitted, see console for error');
       console.error('Error adding document: ', error);
     }
   };
-
+  
   useEffect(() => {
     const fetchEnquiredTeams = async () => {
       try {
@@ -111,17 +147,29 @@ function EnquiryList() {
           <h2 className=" text-2xl font-bold pl-10 ml-9  mb-4">Team Enquiry List</h2>
           <div className='flex flex-wrap justify-evenly overflow-x-hidden'>
             {enquiredTeams.map(team => (
-              <ExpertCard
-                key={team.id}
-                firstName={team.firstName}
-                lastName={team.lastName}
-                profession={team.profession}
-                imgUrl={team.imgUrl}
-              />
+              <div key={team.id} className="relative">
+                {team.enquiry && (
+                  <button
+                    onClick={() => handleRemoveEnquiry(team.id)}
+                    className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                    title="Remove Enquiry"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 4.293a1 1 0 0 1 1.414 1.414L10 11.414l3.293-3.293a1 1 0 1 1 1.414 1.414L11.414 12l3.293 3.293a1 1 0 1 1-1.414 1.414L10 13.414l-3.293 3.293a1 1 0 1 1-1.414-1.414L8.586 12 5.293 8.707a1 1 0 0 1 0-1.414z" />
+                    </svg>
+                  </button>
+                )}
+                <ExpertCard
+                  firstName={team.firstName}
+                  lastName={team.lastName}
+                  profession={team.profession}
+                  imgUrl={team.imgUrl}
+                  enableHover={false}
+                />
+              </div>
             ))}
           </div>
         </div>
-
 
         <div className=' flex-grow w-[410px] h-[580px] mr-10 pt-6 bg-white rounded-xl'>
           <form className='pl-6 pr-6' onSubmit={handleSubmit}>

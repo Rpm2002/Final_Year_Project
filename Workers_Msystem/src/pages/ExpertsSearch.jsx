@@ -29,7 +29,7 @@ function ExpertSearch() {
       <div className='flex flex-wrap justify-evenly overflow-x-hidden'>
         {workers.map(worker => (
           <Link to={`/expertdetail/${worker.id}`} key={worker.id}>
-            <ExpertCard firstName={worker.firstName} lastName={worker.lastName} profession={worker.profession} imgUrl={worker.imgUrl} />
+            <ExpertCard firstName={worker.firstName} lastName={worker.lastName} profession={worker.profession} imgUrl={worker.imgUrl} enableHover={true} />
           </Link>
         ))}
       </div>
