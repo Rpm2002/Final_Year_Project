@@ -6,7 +6,7 @@ import { MdEdit, MdDelete } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import { GrUserWorker } from 'react-icons/gr';
 
-function HomeTable({ showSearchBar = true }) { // Add props with default value for showSearchBar
+function UserTable({ showSearchBar = true }) { // Add props with default value for showSearchBar
   const [workers, setWorkers] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState([]);
@@ -16,12 +16,17 @@ function HomeTable({ showSearchBar = true }) { // Add props with default value f
     getWorkers();
   }, []);
 
+  // Search Functionality
   useEffect(() => {
-    const result = workers.filter((item) => {
-      return item.name.toLowerCase().match(search.toLocaleLowerCase());
-    });
-    setFilter(result);
-  }, [search]);
+   const result = workers.filter((item) => {
+    return (
+      item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+  setFilter(result);
+}, [search, workers]);
+
 
   // DELETE DATA
   const handleDelete = (id) => {
@@ -40,7 +45,7 @@ function HomeTable({ showSearchBar = true }) { // Add props with default value f
       if (result.value) {
         const [worker] = workers.filter((worker) => worker.id === id);
 
-        deleteDoc(doc(db, 'EnquiryInfo', id));
+        deleteDoc(doc(db, 'UserInfo', id));
 
         Swal.fire({
           icon: 'success',
@@ -67,34 +72,28 @@ const handleEdit = (id) => {
     title: `Details of ${name}`,
     html: `
       <div style="display: flex;">
-        <div>
-          <div style="flex;flex-direction:row;">
-            <label for="name">Name :</label>
+        <div style="flex: 1; flex-direction: column;">
+          <div>
             <input id="name" class="swal2-input" value="${name}" disabled>
           </div>
 
           <div>
-            <label for="Mobile">Mobile :</label>
             <input id="phone" class="swal2-input" value="${phone}" disabled>
           </div>
 
           <div  style="margin-bottom:20px;">
-            <label for="enquirydate">Enquiry Date :</label>
             <input id="enquiryDate" class="swal2-input" value="${enquiryDate}" disabled>
           </div>
 
           <div style="margin-bottom:20px;">
-            <label for="email">Email :</label>
             <textarea id="email" style="height: auto; width: 100%;" class="swal2-input" disabled>${email}   </textarea>
           </div>
 
           <div style="margin-bottom:20px;">
-            <label for="address">Address :</label>
             <textarea id="address" style="height: auto; width: 100%;" class="swal2-input" disabled>${address}</textarea>
           </div>
           
           <div style="margin-bottom:20px;">
-            <label for="description">Work-Description :</label>  
             <textarea id="description" style="height: auto; width: 100%;" class="swal2-input" disabled>${workDescription}</textarea>
           </div>
         </div>
@@ -115,7 +114,7 @@ const handleEdit = (id) => {
 
 
   const getWorkers = async () => {
-    const querySnapshot = await getDocs(collection(db, 'EnquiryInfo'));
+    const querySnapshot = await getDocs(collection(db, 'UserInfo'));
     const workers = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     console.log(workers);
     setWorkers(workers);
@@ -128,27 +127,18 @@ const handleEdit = (id) => {
 
   const columns = [
     {
-      name: 'Name',
-      selector: (row) => row.name,
+      name: 'FirstName',
+      selector: (row) => row.firstName,
     },
     {
-      name: 'Phone',
-      selector: (row) => row.phone,
+      name: 'LastName',
+      selector: (row) => row.lastName,
     },
     {
-      name: 'Date Submitted',
-      selector: (row) => row.enquiryDate,
-      sortable: true,
+      name: 'Email',
+      selector: (row) => row.email,
     },
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <>
-          <MdEdit className='mr-5 hover:cursor-pointer hover:text-blue-600' onClick={() => handleEdit(row.id, row)} />
-          <MdDelete onClick={() => handleDelete(row.id)} className='hover:cursor-pointer hover:text-red-600' />
-        </>
-      ),
-    },
+    
   ];
 
   const customStyles = {
@@ -200,4 +190,4 @@ const handleEdit = (id) => {
   );
 }
 
-export default HomeTable;
+export default UserTable;

@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { initializeApp} from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged,signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore} from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const FirebaseContext = createContext(null);
 
@@ -21,9 +21,8 @@ export const useFirebase = () => useContext(FirebaseContext);
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseAuth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
-export const db=getFirestore(firebaseApp)
+export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
-
 
 export const FirebaseProvider = (props) => {
   console.log("FirebaseProvider initialized");
@@ -42,8 +41,23 @@ export const FirebaseProvider = (props) => {
   }, [firebaseAuth]);
 
 
-  const SignUpwithEmailAndPassword = (email, password) => {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const SignUpwithEmailAndPassword = async (email, password) => {
+    try {
+      const result = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      // Store user information in Firestore
+      await storeUserInfo(result.user.uid, { email });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  const storeUserInfo = async (uid, userInfo) => {
+    try {
+      await setDoc(doc(db, 'UserInfo', uid), userInfo);
+    } catch (error) {
+      throw error;
+    }
   }
 
   const LoginwithEmailAndPassword = (email, password) => {
@@ -62,7 +76,7 @@ export const FirebaseProvider = (props) => {
 
   return (
     <FirebaseContext.Provider
-      value={{ SignUpwithEmailAndPassword, LoginwithEmailAndPassword, LoginwithGoogle, isLoggedIn, user,SignOut }}
+      value={{ SignUpwithEmailAndPassword, LoginwithEmailAndPassword, LoginwithGoogle, isLoggedIn, user, SignOut,storeUserInfo }}
     >
       {props.children}
     </FirebaseContext.Provider>

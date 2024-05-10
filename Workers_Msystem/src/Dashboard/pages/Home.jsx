@@ -13,7 +13,7 @@ function Home() {
   console.log("Home component rendered");
   const navigate=useNavigate()
   const handleSeeAllClick = () => {
-    navigate('/dashboard/workers');
+    navigate('/dashboard/enquiries');
   };
   return (
     <>
@@ -107,7 +107,7 @@ function Home() {
       <div className='grid grid-cols-12 gap-2'>
         <div className='md:col-span-9'>
           <div className='flex justify-between m-2 items-center'>
-            <p className='text-xl font-semibold ml-9 mb-2'>Recent Worker Enquiries</p>
+            <p className='text-xl font-semibold ml-9 mb-2'>Recent Enquiries For Workers</p>
             <div className='flex justify-between items-center'>
               <span>See ALL</span><MdArrowOutward onClick={handleSeeAllClick} className='ml-2 hover:text-blue-600'/>
             </div>

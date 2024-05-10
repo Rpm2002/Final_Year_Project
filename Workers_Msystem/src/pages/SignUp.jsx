@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useFirebase } from '../Firebase/Context';
 import toast, { Toaster } from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import loginlogo from '../Images/LoginSignup.png';
 
 const Signup = () => {
@@ -9,8 +9,10 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,23 +21,22 @@ const Signup = () => {
       setError('Passwords do not match');
       return;
     }
-    setError("")
+    setError('');
     try {
       const result = await firebase.SignUpwithEmailAndPassword(email, pwd);
       console.log('SignUp Successful', result);
+      // Store additional user information in the "UserInfo" collection
+      await firebase.storeUserInfo(result.user.uid, { firstName, lastName, email });
       toast.success('Account Created');
       setTimeout(() => {
-        navigate('/')
-      },2000);
-      
+        navigate('/');
+      }, 2000);
     } catch (error) {
       console.error('Error creating account:', error.message);
-      setError(error.message)
+      setError(error.message);
       toast.error('Error creating account: ' + error.message);
     }
   };
-
-
 
   return (
     <>
@@ -60,6 +61,8 @@ const Signup = () => {
                     type="text"
                     autoComplete="given-name"
                     required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
                     placeholder="First Name"
                   />
@@ -74,6 +77,8 @@ const Signup = () => {
                     type="text"
                     autoComplete="family-name"
                     required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
                     placeholder="Last Name"
                   />

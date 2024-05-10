@@ -16,5 +16,10 @@ export const SidebarData=[
     title:'Users',
     path:'/dashboard/users',
     icon:<AiOutlineTeam/>,
-  }
+  },
+  {
+    title:'Work Enquiries',
+    path:'/dashboard/enquiries',
+    icon:<AiOutlineTeam/>,
+  },
 ]

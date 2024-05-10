@@ -29,7 +29,7 @@ function App() {
           <Route path='/enquiry' element={<EnquiryList/>}/>
           <Route path='/thankyou' element={<Thankyou/>}/>
         </Routes>
-          {/* <MainDashboard /> */}
+          <MainDashboard />
           {/* <MainWorkerDashboard /> */}
           {/* <MainUserDash /> */}
       </BrowserRouter>

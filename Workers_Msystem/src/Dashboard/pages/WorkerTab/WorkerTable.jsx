@@ -2,33 +2,34 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { db } from '../../../Firebase/Context';
 import { collection, getDocs, doc, deleteDoc, setDoc } from 'firebase/firestore';
-import { MdEdit, MdDelete } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 import Swal from 'sweetalert2';
 
-function WorkerTable({ showSearchBar = true }) { // Add props with default value for showSearchBar
+function WorkerTable({ showSearchBar = true }) {
   const [workers, setWorkers] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState([]);
 
-  // Search Functionality
   useEffect(() => {
     getWorkers();
   }, []);
 
   useEffect(() => {
     const result = workers.filter((item) => {
-      return item.name.toLowerCase().match(search.toLocaleLowerCase());
+      return (item.firstName + item.lastName).toLowerCase().includes(search.toLowerCase()) ||
+        item.email.toLowerCase().includes(search.toLowerCase()) ||
+        item.profession.toLowerCase().includes(search.toLowerCase()) ||
+        item.location.toLowerCase().includes(search.toLowerCase());
     });
     setFilter(result);
-  }, [search]);
+  }, [search, workers]);
 
-  // DELETE DATA
   const handleDelete = (id) => {
     const workerToDelete = workers.find((worker) => worker.id === id);
 
     Swal.fire({
       icon: 'warning',
-      title: `Are you sure you want to delete the worker ${workerToDelete.name}?`,
+      title: `Are you sure you want to delete the team ${workerToDelete.firstName} ${workerToDelete.lastName}?`,
       text: "You won't be able to revert this!",
       showCancelButton: true,
       cancelButtonText: 'No, cancel!',
@@ -39,7 +40,7 @@ function WorkerTable({ showSearchBar = true }) { // Add props with default value
       if (result.value) {
         const [worker] = workers.filter((worker) => worker.id === id);
 
-        deleteDoc(doc(db, 'UserInfo', id));
+        deleteDoc(doc(db, 'WorkerInfo', id));
 
         Swal.fire({
           icon: 'success',
@@ -55,78 +56,9 @@ function WorkerTable({ showSearchBar = true }) { // Add props with default value
     });
   };
 
-  // EDIT DATA
-  const handleEdit = (id, newData) => {
-    const workerToEdit = workers.find((worker) => worker.id === id);
-    const { name, email, profession, date } = workerToEdit;
-
-    Swal.fire({
-      title: `Edit Info: ${name}`,
-      html: `<div>
-          <div>
-            <label for="name">Name</label>
-            <input id="name" class="swal2-input" value="${name}" placeholder="Name">
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" class="swal2-input" value="${email}" placeholder="Email">
-          </div>
-          <div>
-            <label for="profession">Profession</label>
-            <input id="profession" class="swal2-input" value="${profession}" placeholder="Profession">
-          </div>
-          <div>
-            <label for="date">Date Submitted</label>
-            <input id="date" class="swal2-input" type="date" value="${date}">
-          </div>
-        </div>`,
-      showCancelButton: true,
-      cancelButtonText: 'Reject',
-      cancelButtonColor: '#FFE2D8',
-      confirmButtonText: 'Approve',
-      confirmButtonColor: '#F04800',
-      focusConfirm: false,
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector('#name').value;
-        const email = Swal.getPopup().querySelector('#email').value;
-        const profession = Swal.getPopup().querySelector('#profession').value;
-        const date = Swal.getPopup().querySelector('#date').value;
-        return { name, email, profession, date };
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const { name, email, profession } = result.value;
-        const updatedData = { ...newData, name, email, profession, status: 'approved' };
-        setDoc(doc(db, 'UserInfo', id), updatedData);
-        const updatedWorkers = workers.map((worker) => (worker.id === id ? updatedData : worker));
-        setWorkers(updatedWorkers);
-        Swal.fire({
-          icon: 'success',
-          title: 'Approved!',
-          text: `${name}'s data has been approved and updated.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        const updatedData = { ...newData, status: 'rejected' };
-        setDoc(doc(db, 'UserInfo', id), updatedData);
-        const updatedWorkers = workers.map((worker) => (worker.id === id ? updatedData : worker));
-        setWorkers(updatedWorkers);
-        Swal.fire({
-          icon: 'info',
-          title: 'Rejected!',
-          text: `${name}'s data has been rejected.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    });
-  };
-
   const getWorkers = async () => {
-    const querySnapshot = await getDocs(collection(db, 'UserInfo'));
+    const querySnapshot = await getDocs(collection(db, 'WorkerInfo'));
     const workers = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    console.log(workers);
     setWorkers(workers);
     setFilter(workers);
   };
@@ -138,29 +70,28 @@ function WorkerTable({ showSearchBar = true }) { // Add props with default value
   const columns = [
     {
       name: 'Name',
-      selector: (row) => row.name,
+      selector: (row) => `${row.firstName} ${row.lastName}`,
     },
     {
       name: 'Profession',
       selector: (row) => row.profession,
     },
     {
-      name: 'Date Submitted',
-      selector: (row) => row.date,
+      name: 'Email',
+      selector: (row) => row.email,
       sortable: true,
+      wrap: true, 
+      maxWidth: '200px', 
     },
     {
-      name: 'Status',
-      selector: (row) => row.status,
+      name: 'Location',
+      selector: (row) => row.location,
       sortable: true,
     },
     {
       name: 'Actions',
       cell: (row) => (
-        <>
-          <MdEdit className='mr-5 hover:cursor-pointer hover:text-blue-600' onClick={() => handleEdit(row.id, row)} />
-          <MdDelete onClick={() => handleDelete(row.id)} className='hover:cursor-pointer hover:text-red-600' />
-        </>
+        <MdDelete onClick={() => handleDelete(row.id)} className='hover:cursor-pointer hover:text-red-600' />
       ),
     },
   ];

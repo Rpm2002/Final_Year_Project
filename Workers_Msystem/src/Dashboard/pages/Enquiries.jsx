@@ -1,9 +1,9 @@
 import React from 'react'
 import LoggedinUserImg from '../../Images/LoggedUser.svg'
-import UserTable from './UserTable/UserTable';
+import HomeTable from './HomeTable/HomeTable';
 import { AiOutlineTeam } from 'react-icons/ai';
 
-function Users() {
+function Enquiries() {
   console.log("Users component rendered");
   return (
     <>
@@ -25,14 +25,14 @@ function Users() {
       {/* Tabs  */}
       <div className='grid grid-cols-12 gap-2'>
         <div className='md:col-span-9'>
-          <UserTable/>
+          <HomeTable/>
         </div>
         <div className='md:col-span-3'>
           <div className='flex justify-between items-center w-56 p-4 ml-4 border-2 mb-6 border-[#616161] rounded-xl'>
             <div>
               <div>
-                <p className='text-3xl font-semibold'>300</p>
-                <p>Pending Enquiries</p>
+                <p className='text-3xl font-semibold'>30</p>
+                <p>Total Enquiries</p>
               </div>
             </div>
                 <AiOutlineTeam className='text-4xl mb-3'/>
@@ -48,4 +48,4 @@ function Users() {
   )
 }
 
-export default Users
+export default Enquiries

@@ -3,6 +3,7 @@ import { Routes,Route,useLocation } from 'react-router-dom'
 import Workers from '../pages/Workers'
 import Users from '../pages/Users'
 import Home from '../pages/Home'
+import Enquiries from '../pages/Enquiries'
 
 function Navpage() {
   
@@ -17,6 +18,7 @@ function Navpage() {
           <Route path='/dashboard' element={<Home/>}/>
           <Route path='/dashboard/workers' element={<Workers/>}/>
           <Route path='/dashboard/users' element={<Users/>}/>
+          <Route path='/dashboard/enquiries' element={<Enquiries/>}/>
         </Routes>
       </section>
     </>
