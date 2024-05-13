@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import { useParams } from 'react-router-dom';
 import { collection, doc, getDoc, updateDoc, getDocs } from 'firebase/firestore';
-import { db } from '../Firebase/Context';
+import { db, storage } from '../Firebase/Context'; // Import storage from Firebase context
 import 'react-datepicker/dist/react-datepicker.css';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -47,7 +47,6 @@ function ExpertDetail() {
   const handleAddToEnquiryList = async () => {
     try {
       if (worker) {
-        // Update the WorkerInfo document with the enquiry information
         const workerDocRef = doc(db, 'WorkerInfo', id);
         await updateDoc(workerDocRef, {
           enquiry: true,
@@ -108,15 +107,20 @@ function ExpertDetail() {
         {/* Previous Projects */}
         <div className='mt-8'>
           <h2 className='text-2xl text-center font-semibold mb-4'>Previous Projects</h2>
-          <div className='grid grid-cols-3 gap-4'>
+          <div className='flex'>
             {previousProjects.map(project => (
-              <div key={project.id} className='bg-[#FFE2D8] flex justify-between items-end p-4 m-4 w-[630px] h-[347px] rounded-lg shadow-md'>
-                <div>
-                  <h3 className='text-lg font-semibold'>{project.name}</h3>
-                  <p className='text-gray-600'>Type: {project.type}</p>
+              <div key={project.id} className='bg-[#FFE2D8] p-4 m-4 w-[630px] h-[350px] rounded-lg shadow-md'>
+                <div className=' mb-2 w-full'>
+                  <img src={project.img} alt={project.name} className='h-[271px] w-full object-cover'/>
                 </div>
-                <div>
-                  <p className='text-gray-600'>Date completed: {project.date.toDate().toDateString()}</p>
+                <div className='flex justify-between'>
+                  <div>
+                    <h3 className='text-lg font-semibold'>{project.name}</h3>
+                    <p className='text-gray-600'>Type: {project.type}</p>
+                  </div>
+                  <div>
+                    <p className='text-gray-600'>Date completed: {project.date.toDate().toDateString()}</p>
+                  </div>
                 </div>
               </div>
             ))}
