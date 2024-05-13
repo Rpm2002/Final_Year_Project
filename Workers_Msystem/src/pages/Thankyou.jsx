@@ -1,9 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import ThankTop from '../Images/Thank_Top.svg';
 import ThankBottom from '../Images/Thank_Bottom.svg';
 import HomeLogo from '../Images/Group.svg';
 
 function Thankyou() {
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleExploreMoreTeams = () => {
+    // Navigate to ExpertSearch page
+    navigate('/expertsearch');
+  };
+
+  const handleCreateAnotherEnquiry = () => {
+    // Navigate to Enquiry page
+    navigate('/enquiry');
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div
@@ -27,10 +40,12 @@ function Thankyou() {
         </div>
 
         <div className="flex space-x-4">
-          <button className="text-[#494949] font-medium text-sm  focus:outline-none px-5 py-2 inline-block rounded-lg">
+          {/* Call handleExploreMoreTeams when Explore More Teams button is clicked */}
+          <button onClick={handleExploreMoreTeams} className="text-[#494949] font-medium text-sm focus:outline-none px-5 py-2 inline-block rounded-lg">
             Explore More Teams
           </button>
-          <button className="text-white  hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg">
+          {/* Call handleCreateAnotherEnquiry when Create Another Enquiry button is clicked */}
+          <button onClick={handleCreateAnotherEnquiry} className="text-white hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium text-sm dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800 px-5 py-2 inline-block rounded-lg">
             Create Another Enquiry
           </button>
         </div>

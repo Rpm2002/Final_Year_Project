@@ -1,10 +1,12 @@
+// Header.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HomeLogo from '../Images/Group.svg';
 import LoggedUser from './LoggedInUserDetail';
 import { useFirebase } from '../Firebase/Context';
 
-function Header() {
+function Header({ isAdmin }) {
+  console.log('isAdmin in Header:', isAdmin); // Add console log to check isAdmin prop
   const firebase = useFirebase();
 
   const handleSignOut = () => {
@@ -50,13 +52,17 @@ function Header() {
                 </Link>
               </li>
 
+              {/* Add conditional rendering based on isAdmin */}
+              {isAdmin ? null : (
+                <li>
+                  <Link to="/enquiry" className="text-gray-600 font-semibold hover:text-gray-400">
+                    Enquiry List
+                  </Link>
+                </li>
+              )}
+              
               {firebase.isLoggedIn ? (
                 <>
-                  <li>
-                    <Link to="/enquiry" className="text-gray-600 font-semibold hover:text-gray-400">
-                      Enquiry List
-                    </Link>
-                  </li>
                   <li>
                     <button
                       onClick={handleSignOut}
@@ -72,11 +78,6 @@ function Header() {
                 </>
               ) : (
                 <>
-                  <li>
-                    <Link to="/join" className="text-gray-600 font-semibold hover:text-gray-400">
-                      Join Us
-                    </Link>
-                  </li>
                   <li>
                     <Link to="/login" className="text-gray-600 font-semibold hover:text-gray-400">
                       Login

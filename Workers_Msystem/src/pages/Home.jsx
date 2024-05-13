@@ -1,12 +1,14 @@
-import React from 'react'
+// Home.jsx
+import React from 'react';
 import HeroSectionImage from '../Images/HeroSection.png'; 
-import Header from '../Components/Header';
 import Button from '../Components/Button';
+import Header from '../Components/Header'; // Import the Header component
 
-function Home() {
+function Home({ isAdmin }) { // Accept isAdmin prop
+  console.log('isAdmin in Home:', isAdmin); // Add console log to check isAdmin prop
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <Header/>
+      {!isAdmin && <Header />} {/* Render Header only if the user is not an admin */}
       <div className='flex-1 flex ml-4'>
         <div className='flex-1 flex flex-col justify-center px-8'>
           <div>
